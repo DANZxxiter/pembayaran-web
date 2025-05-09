@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>𝐌𝐞𝐭𝐨𝐝𝐞 𝐏𝐞𝐦𝐛𝐚𝐲𝐚𝐫𝐚𝐧 | 𝐃𝐚𝐧𝐳𝐳 𝐎𝐟𝐟𝐜𝐥𝐥</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    video.background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pay-button {
+      background: #1e1e1e;
+      border: 2px solid #555;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .pay-button:hover {
+      background: #333;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      backdrop-filter: blur(10px);  /* Apply blur effect to the background */
+      background: rgba(0, 0, 0, 0.5);  /* Semi-transparent dark background */
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      animation: zoomIn 0.3s ease;
+      z-index: 1000;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    .copy-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #0056b3;
+    }
+
+    .wa-button {
+      margin-top: 2rem;
+      background: #25d366;
+      padding: 0.75rem 2rem;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo {
+      max-width: 120px;
+      max-height: 120px;
+      margin-bottom: 1rem;
+      border-radius: 50%; /* Membuat logo menjadi bulat */
+      object-fit: cover; /* Memastikan gambar tetap proporsional dan menyesuaikan ukuran */
+    }
+  </style>
+</head>
+<body>
+
+  <video class="background-video" autoplay muted loop>
+    <source src="https://files.catbox.moe/oxmyen.mp4" type="video/mp4">
+  </video>
+
+  <img src="https://files.catbox.moe/hmwldu.jpg" alt="Logo" class="logo">
+  <audio autoplay loop>
+    <source src="https://files.catbox.moe/xy55bd.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="title">Metode Pembayaran Danzz Offcl</div>
+
+  <div class="buttons">
+    <button class="pay-button" onclick="openModal('DANA', '0882008261010', 'Danzz Official', 'https://files.catbox.moe/2v09h4.jpg')">DANA</button>
+    <button class="pay-button" onclick="openModal('OVO', '088221170125', 'Danzz Official', 'https://files.catbox.moe/5tvyki.jpg')">OVO</button>
+    <button class="pay-button" onclick="openQRIS('https://files.catbox.moe/3lktil.jpg')">QRIS</button>
+  </div>
+
+  <a class="wa-button" href="https://wa.me/6288221170125" target="_blank">Kirim Bukti Pembayaran di Sini</a>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modalContent">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type, number, name, bgImage) {
+      const modal = document.getElementById('modal');
+      const modalBody = document.getElementById('modalBody');
+      modal.style.display = 'flex';
+
+      // Add blur effect to the background (video)
+      document.body.style.backdropFilter = 'blur(10px)';
+
+      modalBody.innerHTML = `
+        <h2>${type}</h2>
+        <img src="${bgImage}" alt="${type}" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 1rem; object-fit: cover;">
+        <p><strong>Nomor:</strong> <span id="copyNum">${number}</span></p>
+        <p><strong>Atas Nama:</strong> ${name}</p>
+        <button class="copy-btn" onclick="copyText('${number}')">Salin Nomor</button>
+      `;
+    }
+
+    function openQRIS(imgLink) {
+      const modal = document.getElementById('modal');
+      const modalBody = document.getElementById('modalBody');
+      modal.style.display = 'flex';
+
+      // Add blur effect to the background (video)
+      document.body.style.backdropFilter = 'blur(10px)';
+      
+      modalBody.innerHTML = `
+        <h2>QRIS</h2>
+        <img src="${imgLink}" alt="QRIS" style="width: 100%; height: auto; border-radius: 12px; object-fit: cover;">
+        <p>Silakan Screenshot QRIS untuk Pembayaran</p>
+      `;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'none';
+      
+      // Remove blur effect when modal is closed
+      document.body.style.backdropFilter = '';
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text);
+      alert('Nomor disalin!');
+    }
+  </script>
+</body>
+</html>
